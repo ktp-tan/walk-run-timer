@@ -240,3 +240,27 @@ function togglePause() {
 startBtn.addEventListener('click', startTimer);
 stopBtn.addEventListener('click', stopTimer);
 pauseBtn.addEventListener('click', togglePause);
+
+const notifyBtn = document.getElementById('notify-btn');
+if (notifyBtn) {
+    notifyBtn.addEventListener('click', () => {
+        if (!("Notification" in window)) {
+            alert("เบราว์เซอร์ของคุณไม่รองรับการแจ้งเตือนครับ");
+            return;
+        }
+        
+        if (Notification.permission === "granted") {
+            alert("คุณเปิดการแจ้งเตือนไว้แล้วครับ สามารถใช้งานได้เลย ✅\n\n(หากแอพไม่เตือน อาจเป็นเพราะมือถือปิดกั้นการแจ้งเตือนของแอพ Chrome/Browser อยู่)");
+        } else if (Notification.permission === "denied") {
+            alert("คุณเคยปิดกั้นการแจ้งเตือนไว้ ❌\n\nวิธีแก้: ไปที่ การตั้งค่า (Settings) ของโทรศัพท์ -> แอป (Apps) -> Chrome -> การแจ้งเตือน (Notifications) แล้วกดยอมรับครับ");
+        } else {
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    alert("เปิดการแจ้งเตือนสำเร็จ! ✅");
+                } else {
+                    alert("การแจ้งเตือนถูกปฏิเสธ ❌");
+                }
+            });
+        }
+    });
+}
