@@ -229,6 +229,7 @@ function updateMediaSession(phase) {
                 { src: 'icon.png', sizes: '512x512', type: 'image/png' }
             ]
         });
+        navigator.mediaSession.playbackState = phase.includes('พัก') ? 'paused' : 'playing';
     }
 }
 
