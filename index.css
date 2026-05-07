@@ -224,11 +224,16 @@ header p {
 }
 
 .total-time-display {
-    margin-top: 0.5rem;
-    font-size: 1.25rem;
-    color: rgba(255,255,255,0.85);
+    position: absolute;
+    top: 2.5rem;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.7);
     font-weight: 600;
     font-variant-numeric: tabular-nums;
+    letter-spacing: 1px;
 }
 
 .next-phase-info {
