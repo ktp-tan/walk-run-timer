@@ -92,6 +92,17 @@ function triggerVibration() {
     }
 }
 
+// System Notification
+function sendNotification(title, body) {
+    if ("Notification" in window && Notification.permission === "granted") {
+        new Notification(title, {
+            body: body,
+            icon: "icon.png",
+            vibrate: [200, 100, 200]
+        });
+    }
+}
+
 function triggerAlerts() {
     playSoftBell();
     triggerVibration();
@@ -134,6 +145,9 @@ function startTimer() {
     if (walkTime === 0 && runTime === 0) return; // Prevent start if all zeros
     
     requestWakeLock();
+    if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+        Notification.requestPermission();
+    }
     
     setupScreen.classList.remove('active');
     timerScreen.classList.add('active');
@@ -174,6 +188,11 @@ function switchPhase() {
     endTime = Date.now() + (timeRemaining * 1000); // Reset end time for new phase
     
     triggerAlerts();
+    if (isWalkPhase) {
+        sendNotification('🚶 ได้เวลาเดินแล้ว!', `เดินเป็นเวลา ${formatTime(walkTime)}`);
+    } else {
+        sendNotification('🏃 ได้เวลาวิ่งแล้ว!', `วิ่งเป็นเวลา ${formatTime(runTime)}`);
+    }
     updateTimerDisplay();
 }
 
