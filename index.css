@@ -1,0 +1,301 @@
+:root {
+    --bg-color: #0f172a;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --card-bg: #1e293b;
+    
+    --walk-color: #10b981; /* Green */
+    --walk-color-glow: rgba(16, 185, 129, 0.3);
+    
+    --run-color: #3b82f6; /* Blue */
+    --run-color-glow: rgba(59, 130, 246, 0.3);
+    
+    --danger-color: #ef4444;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+    transition: background-color 0.5s ease;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 480px;
+    height: 100vh;
+    height: 100dvh;
+    position: relative;
+}
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s;
+    transform: scale(0.98);
+}
+
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+}
+
+/* Setup Screen */
+#setup-screen {
+    justify-content: center;
+    gap: 2rem;
+}
+
+header h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 0.2rem;
+    background: linear-gradient(to right, #38bdf8, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+header p {
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.input-card {
+    background-color: var(--card-bg);
+    border-radius: 1.5rem;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.walk-card { border-top: 4px solid var(--walk-color); }
+.run-card { border-top: 4px solid var(--run-color); }
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.time-inputs {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.time-field {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.time-field label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+    font-weight: 400;
+}
+
+.number-control {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0,0,0,0.2);
+    border-radius: 1rem;
+    padding: 0.4rem;
+    width: 100%;
+}
+
+.number-control button {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    font-size: 1.2rem;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: rgba(255,255,255,0.05);
+    transition: background 0.2s;
+}
+
+.number-control button:active {
+    background-color: rgba(255,255,255,0.2);
+}
+
+.number-control input {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    font-size: 1.4rem;
+    font-weight: 800;
+    text-align: center;
+    width: 2.5rem;
+    font-family: inherit;
+}
+
+.number-control input:focus {
+    outline: none;
+}
+
+.primary-btn {
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    color: white;
+    border: none;
+    padding: 1.2rem;
+    border-radius: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+    transition: transform 0.1s, box-shadow 0.1s;
+    margin-top: 0.5rem;
+}
+
+.primary-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 5px 10px rgba(59, 130, 246, 0.3);
+}
+
+/* Timer Screen */
+#timer-screen {
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 4rem;
+    padding-bottom: 3rem;
+}
+
+.timer-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.phase-badge {
+    background: rgba(255,255,255,0.1);
+    padding: 0.75rem 2rem;
+    border-radius: 2rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: all 0.5s ease;
+}
+
+.time-display {
+    font-size: 6rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    text-shadow: 0 0 40px rgba(255,255,255,0.1);
+    transition: all 0.5s ease;
+}
+
+.next-phase-info {
+    margin-top: 2rem;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    justify-content: center;
+}
+
+.control-btn {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-width: 110px;
+}
+
+.control-btn.stop {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+}
+
+.control-btn:active {
+    opacity: 0.8;
+}
+
+.wakelock-status {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.6);
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+#timer-screen.active .wakelock-status {
+    opacity: 1;
+}
+
+/* Dynamic Classes applied via JS */
+body.phase-walk {
+    background-color: #064e3b; /* Dark Green */
+}
+body.phase-walk .time-display {
+    color: #34d399;
+    text-shadow: 0 0 50px var(--walk-color-glow);
+}
+body.phase-walk .phase-badge {
+    background: var(--walk-color);
+    color: #fff;
+    box-shadow: 0 0 20px var(--walk-color-glow);
+}
+
+body.phase-run {
+    background-color: #1e3a8a; /* Dark Blue */
+}
+body.phase-run .time-display {
+    color: #60a5fa;
+    text-shadow: 0 0 50px var(--run-color-glow);
+}
+body.phase-run .phase-badge {
+    background: var(--run-color);
+    color: #fff;
+    box-shadow: 0 0 20px var(--run-color-glow);
+}

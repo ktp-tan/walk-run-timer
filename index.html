@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Walk & Run Timer</title>
+    <link rel="stylesheet" href="index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app" class="app-container">
+        <!-- Setup Screen -->
+        <section id="setup-screen" class="screen active">
+            <header>
+                <h1>Interval Timer</h1>
+                <p>ตั้งเวลาสำหรับการออกกำลังกาย</p>
+            </header>
+            
+            <div class="input-group">
+                <div class="input-card walk-card">
+                    <div class="card-title">🚶 เดิน</div>
+                    <div class="time-inputs">
+                        <div class="time-field">
+                            <label>นาที</label>
+                            <div class="number-control">
+                                <button type="button" onclick="adjustTime('walk-min', -1)">-</button>
+                                <input type="number" id="walk-min" value="3" min="0" max="60">
+                                <button type="button" onclick="adjustTime('walk-min', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="time-field">
+                            <label>วินาที</label>
+                            <div class="number-control">
+                                <button type="button" onclick="adjustTime('walk-sec', -10)">-</button>
+                                <input type="number" id="walk-sec" value="0" min="0" max="59">
+                                <button type="button" onclick="adjustTime('walk-sec', 10)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-card run-card">
+                    <div class="card-title">🏃 วิ่ง</div>
+                    <div class="time-inputs">
+                        <div class="time-field">
+                            <label>นาที</label>
+                            <div class="number-control">
+                                <button type="button" onclick="adjustTime('run-min', -1)">-</button>
+                                <input type="number" id="run-min" value="1" min="0" max="60">
+                                <button type="button" onclick="adjustTime('run-min', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="time-field">
+                            <label>วินาที</label>
+                            <div class="number-control">
+                                <button type="button" onclick="adjustTime('run-sec', -10)">-</button>
+                                <input type="number" id="run-sec" value="0" min="0" max="59">
+                                <button type="button" onclick="adjustTime('run-sec', 10)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button id="start-btn" class="primary-btn">เริ่มจับเวลา</button>
+        </section>
+
+        <!-- Timer Screen -->
+        <section id="timer-screen" class="screen">
+            <div class="timer-wrapper">
+                <div id="phase-badge" class="phase-badge">เตรียมพร้อม</div>
+                <div id="time-display" class="time-display">00:00</div>
+                <div id="next-phase-info" class="next-phase-info">ต่อไป: -</div>
+            </div>
+            
+            <div class="controls">
+                <button id="pause-btn" class="control-btn icon-btn">⏸️ พัก</button>
+                <button id="stop-btn" class="control-btn icon-btn stop">⏹️ หยุด</button>
+            </div>
+            <div id="wakelock-status" class="wakelock-status">☀️ ระบบป้องกันหน้าจอดับทำงานอยู่</div>
+        </section>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>
