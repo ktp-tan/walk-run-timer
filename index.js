@@ -23,6 +23,7 @@ const nextPhaseInfo = document.getElementById('next-phase-info');
 const startBtn = document.getElementById('start-btn');
 const stopBtn = document.getElementById('stop-btn');
 const pauseBtn = document.getElementById('pause-btn');
+const silentAudio = document.getElementById('silent-audio');
 
 // Input Handlers
 function adjustTime(id, amount) {
@@ -149,6 +150,11 @@ function startTimer() {
         Notification.requestPermission();
     }
     
+    // Start silent audio to trigger media notification
+    if (silentAudio) {
+        silentAudio.play().catch(e => console.log("Audio play error:", e));
+    }
+    
     setupScreen.classList.remove('active');
     timerScreen.classList.add('active');
     
@@ -190,8 +196,10 @@ function switchPhase() {
     triggerAlerts();
     if (isWalkPhase) {
         sendNotification('🚶 ได้เวลาเดินแล้ว!', `เดินเป็นเวลา ${formatTime(walkTime)}`);
+        updateMediaSession('🚶 เดิน');
     } else {
         sendNotification('🏃 ได้เวลาวิ่งแล้ว!', `วิ่งเป็นเวลา ${formatTime(runTime)}`);
+        updateMediaSession('🏃 วิ่ง');
     }
     updateTimerDisplay();
 }
@@ -203,10 +211,24 @@ function updateTimerDisplay() {
         phaseBadge.textContent = '🚶 เดิน (Walk)';
         nextPhaseInfo.textContent = `ต่อไป: วิ่ง ${formatTime(runTime)}`;
         document.body.className = 'phase-walk';
+        updateMediaSession('🚶 เดิน');
     } else {
         phaseBadge.textContent = '🏃 วิ่ง (Run)';
         nextPhaseInfo.textContent = `ต่อไป: เดิน ${formatTime(walkTime)}`;
         document.body.className = 'phase-run';
+        updateMediaSession('🏃 วิ่ง');
+    }
+}
+
+function updateMediaSession(phase) {
+    if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: `กำลังจับเวลา: ${phase}`,
+            artist: 'Walk & Run Timer',
+            artwork: [
+                { src: 'icon.png', sizes: '512x512', type: 'image/png' }
+            ]
+        });
     }
 }
 
@@ -214,6 +236,14 @@ function stopTimer() {
     clearInterval(timerInterval);
     timerInterval = null;
     releaseWakeLock();
+    
+    if (silentAudio) {
+        silentAudio.pause();
+        silentAudio.currentTime = 0;
+    }
+    if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = null;
+    }
     
     document.body.className = '';
     timerScreen.classList.remove('active');
@@ -227,12 +257,16 @@ function togglePause() {
         pauseBtn.textContent = '▶️ ทำต่อ';
         pauseBtn.style.background = 'rgba(16, 185, 129, 0.2)';
         releaseWakeLock();
+        if (silentAudio) silentAudio.pause();
+        updateMediaSession('⏸️ พักชั่วคราว');
     } else {
         // Recalculate end time based on the remaining time
         endTime = Date.now() + (pausedTimeRemaining * 1000);
         pauseBtn.textContent = '⏸️ พัก';
         pauseBtn.style.background = 'rgba(255,255,255,0.1)';
         requestWakeLock();
+        if (silentAudio) silentAudio.play().catch(e => {});
+        updateMediaSession(isWalkPhase ? '🚶 เดิน' : '🏃 วิ่ง');
     }
 }
 
