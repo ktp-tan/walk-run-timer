@@ -6,6 +6,9 @@ let isWalkPhase = true;
 let timerInterval = null;
 let isPaused = false;
 let pausedTimeRemaining = 0; // Store remaining time when paused
+let totalStartTime = 0;
+let totalPausedTime = 0;
+let pauseStartTime = 0;
 
 let audioCtx = null;
 let wakeLock = null;
@@ -24,6 +27,7 @@ const startBtn = document.getElementById('start-btn');
 const stopBtn = document.getElementById('stop-btn');
 const pauseBtn = document.getElementById('pause-btn');
 const silentAudio = document.getElementById('silent-audio');
+const totalTimeDisplay = document.getElementById('total-time-display');
 
 // Input Handlers
 function adjustTime(id, amount) {
@@ -165,8 +169,11 @@ function startTimer() {
     isPaused = false;
     timeRemaining = walkTime;
     endTime = Date.now() + (timeRemaining * 1000);
+    totalStartTime = Date.now();
+    totalPausedTime = 0;
     
     updateTimerDisplay();
+    updateTotalTimeDisplay(0);
     startInterval();
     
     // Unlock audio context
@@ -181,6 +188,9 @@ function startInterval() {
             // Calculate absolute difference to prevent drift if tab goes to background
             const now = Date.now();
             timeRemaining = Math.ceil((endTime - now) / 1000);
+            
+            const totalElapsed = Math.floor((now - totalStartTime - totalPausedTime) / 1000);
+            updateTotalTimeDisplay(totalElapsed);
             
             if (timeRemaining <= 0) {
                 switchPhase();
@@ -236,6 +246,19 @@ function updateMediaSession(phase) {
     }
 }
 
+function updateTotalTimeDisplay(seconds) {
+    if (seconds < 0) seconds = 0;
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60);
+    
+    if (h > 0) {
+        totalTimeDisplay.textContent = `รวม: ${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    } else {
+        totalTimeDisplay.textContent = `รวม: ${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+}
+
 function stopTimer() {
     clearInterval(timerInterval);
     timerInterval = null;
@@ -260,6 +283,7 @@ function togglePause() {
     isPaused = !isPaused;
     if (isPaused) {
         pausedTimeRemaining = timeRemaining;
+        pauseStartTime = Date.now();
         pauseBtn.textContent = '▶️ ทำต่อ';
         pauseBtn.style.background = 'rgba(16, 185, 129, 0.2)';
         releaseWakeLock();
@@ -267,6 +291,7 @@ function togglePause() {
         updateMediaSession('⏸️ พักชั่วคราว');
     } else {
         // Recalculate end time based on the remaining time
+        totalPausedTime += (Date.now() - pauseStartTime);
         endTime = Date.now() + (pausedTimeRemaining * 1000);
         pauseBtn.textContent = '⏸️ พัก';
         pauseBtn.style.background = 'rgba(255,255,255,0.1)';

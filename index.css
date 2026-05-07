@@ -223,6 +223,14 @@ header p {
     transition: all 0.5s ease;
 }
 
+.total-time-display {
+    margin-top: 0.5rem;
+    font-size: 1.25rem;
+    color: rgba(255,255,255,0.85);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
 .next-phase-info {
     margin-top: 2rem;
     color: var(--text-muted);
