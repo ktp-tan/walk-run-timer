@@ -152,6 +152,9 @@ function startTimer() {
     
     // Start silent audio to trigger media notification
     if (silentAudio) {
+        if (!silentAudio.getAttribute('src')) {
+            silentAudio.setAttribute('src', 'https://raw.githubusercontent.com/anars/blank-audio/master/1-hour-of-silence.mp3');
+        }
         silentAudio.play().catch(e => console.log("Audio play error:", e));
     }
     
@@ -238,12 +241,14 @@ function stopTimer() {
     timerInterval = null;
     releaseWakeLock();
     
+    if ('mediaSession' in navigator) {
+        navigator.mediaSession.playbackState = 'none';
+        navigator.mediaSession.metadata = null;
+    }
     if (silentAudio) {
         silentAudio.pause();
-        silentAudio.currentTime = 0;
-    }
-    if ('mediaSession' in navigator) {
-        navigator.mediaSession.metadata = null;
+        silentAudio.removeAttribute('src'); // Forcibly remove source to destroy media player notification
+        silentAudio.load();
     }
     
     document.body.className = '';
